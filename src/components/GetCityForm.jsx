@@ -1,42 +1,40 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './GetCityForm.css'
 
 export default function GetCityForm(props) {
+    // Déclare une nouvelle variable d'état, que l'on va appeler « inputCityName »
+    const [inputCityName, setCityName] = useState("");
+
     return (
         <div className="container mb-4">
-<div>{props.error ?  error() : null}</div>
-            <form onSubmit={props.loadWeather}>
+            <form>
                 <div className="row align-items-center">
-                    <div className="col-6 my-1 offset-md-3">
+                    <div className="col-6 my-1 offset-3">
                         <input 
                             type="text" 
                             className="form-control"
                             name="city" 
                             autoComplete="off" 
-                            placeholder="saisissez une ville" 
+                            placeholder="saisissez une ville"
+                            value={inputCityName}
+                            onChange={updateInputCityName} 
                         />
                     </div>
                     <div className="col-3 my-1 mt-md-0 text-md-left">
-                        <button className="btn btn-info">Valider</button>
+                        <button className="btn btn-info" onClick={handleSearch}>Valider</button>
                     </div>
                 </div> 
             </form>   
         </div>
     )
 
-    function error() {
-        return (
-            <div className="alert alert-warning alert-dismissible fade show mx-5" role="alert">
-                <strong>Holy guacamole!</strong> Veuillez saisir votre ville.
-                <button type="button" className="close" data-dismiss="alert" aria-label="Close" onClick={closeAlert}>
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        )
+    function updateInputCityName(ev){
+        setCityName(ev.target.value)
     }
-    function closeAlert() {
-        //this.error.dismiss()
-        console.log('good')
+
+    function handleSearch(ev){
+        props.handleSearch(inputCityName);
     }
+    
 }
 

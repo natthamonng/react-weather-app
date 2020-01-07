@@ -1,4 +1,5 @@
 import React from 'react'
+import axios from 'axios'
 import GetCityForm from './components/GetCityForm'
 import Weather from './components/Weather'
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -8,48 +9,51 @@ class App extends React.Component {
   constructor(){
     super()
     this.state = {
-      city: undefined,
-      country: undefined,
-      icon: undefined,
-      temp: undefined,
-      minTemp: undefined,
-      maxTemp: undefined,
-      condition: ""
+      weatherData: null,
+      cityName: "Toulon"
     }
-    this.getWeatherPromise()
+    // this.updateWeatherData()
   }
 
-  getWeatherPromise = async () => {
+  // updateWeatherData = async () => {
 
-    const apiCall = await fetch(`https://www.prevision-meteo.ch/services/json/Toulon`)
-    const weatherData = await apiCall.json()
-    console.log(weatherData)
+  //   const apiCall = await fetch(`https://www.prevision-meteo.ch/services/json/${this.state.cityName}`)
+  //   const weatherData = await apiCall.json()
+  //   console.log(weatherData)
 
-    this.setState({
-      city: weatherData.city_info.name,
-      country: weatherData.city_info.country,
-      icon: weatherData.current_condition.icon_big,
-      temp: weatherData.current_condition.tmp,
-      minTemp: weatherData.fcst_day_0.tmin,
-      maxTemp: weatherData.fcst_day_0.tmax,
-      condition: weatherData.current_condition.condition
-    })
+  //   this.setState({
+  //     weatherData
+  //   })
+  // }
+
+  componentDidMount() {
+    axios.get(`https://www.prevision-meteo.ch/services/json/${this.state.cityName}`)
+      .then(res => {
+        const weatherData = res.data;
+        console.log(weatherData)
+        this.setState({
+          weatherData: weatherData
+        })
+      })
+      .catch(err => console.error(err))
+  }
+
+  setCity(cityName){
+    this.setState({ cityName });
+    this.updateWeatherData();
+  }
+
+  handleSearch(cityName){
+    // Update city:
+    this.setCity(cityName);
   }
 
   render() {
     return (
       <div className="App">
-        <GetCityForm />
+        <GetCityForm onSearch={this.handleSearch}/>
         <Weather 
-          city={this.state.city} 
-          country={this.state.country} 
-          icon={this.state.icon} 
-          temp={this.state.temp} 
-          minTemp={this.state.minTemp} 
-          maxTemp={this.state.maxTemp} 
-          condition={this.state.condition}
-        />
-        
+          weatherData={this.state.weatherData}/>
       </div>
     )
   }
@@ -57,7 +61,7 @@ class App extends React.Component {
 
 export default App
 
-        
+
 
 
 
