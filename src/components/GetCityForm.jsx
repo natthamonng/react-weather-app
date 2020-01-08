@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import './GetCityForm.css'
 
 export default function GetCityForm(props) {
-    // Déclare une nouvelle variable d'état, que l'on va appeler « inputCityName »
-    const [inputCityName, setCityName] = useState("");
+    // Declare a new state variable, which we'll call « inputCityName »
+    const [inputCityName, setCityName] = useState('');
 
     return (
         <div className="container mb-4">
@@ -16,8 +16,12 @@ export default function GetCityForm(props) {
                             name="city" 
                             autoComplete="off" 
                             placeholder="saisissez une ville"
-                            value={inputCityName}
-                            onChange={updateInputCityName} 
+                            onChange={updateInputCityName}
+                            onKeyDown={ev => {
+                                if (ev.key === 'Enter') {
+                                  handleSearch(ev);
+                                }
+                            }}
                         />
                     </div>
                     <div className="col-3 my-1 mt-md-0 text-md-left">
@@ -29,12 +33,14 @@ export default function GetCityForm(props) {
     )
 
     function updateInputCityName(ev){
-        setCityName(ev.target.value)
+        const cityName = ev.target.value
+        setCityName(cityName)
     }
 
     function handleSearch(ev){
-        props.handleSearch(inputCityName);
+        ev.preventDefault();
+        props.onSearch(inputCityName);
     }
-    
+
 }
 

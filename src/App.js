@@ -12,40 +12,29 @@ class App extends React.Component {
       weatherData: null,
       cityName: "Toulon"
     }
-    // this.updateWeatherData()
   }
 
-  // updateWeatherData = async () => {
-
-  //   const apiCall = await fetch(`https://www.prevision-meteo.ch/services/json/${this.state.cityName}`)
-  //   const weatherData = await apiCall.json()
-  //   console.log(weatherData)
-
-  //   this.setState({
-  //     weatherData
-  //   })
-  // }
-
   componentDidMount() {
+    this.updateWeatherData();
+  }
+
+  updateWeatherData = async () => {
     axios.get(`https://www.prevision-meteo.ch/services/json/${this.state.cityName}`)
       .then(res => {
         const weatherData = res.data;
-        console.log(weatherData)
         this.setState({
           weatherData: weatherData
         })
       })
       .catch(err => console.error(err))
+    }
+
+  handleSearch = (cityName) => {
+    this.setCity(cityName);
   }
 
   setCity(cityName){
-    this.setState({ cityName });
-    this.updateWeatherData();
-  }
-
-  handleSearch(cityName){
-    // Update city:
-    this.setCity(cityName);
+    this.setState({ cityName }, () => this.updateWeatherData());
   }
 
   render() {

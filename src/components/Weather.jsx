@@ -1,7 +1,6 @@
 import React from 'react'
 
 export default function Weather(props) {
-    console.log(props.weatherData)
     if(props.weatherData == null){
         return (<p>Chargement...</p>)
     }
